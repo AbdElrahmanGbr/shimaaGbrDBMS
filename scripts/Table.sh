@@ -1,18 +1,22 @@
 #!/bin/bash
 createTable(){
+    #reading table name from user
     echo -e "Table Name: \c"
     read tableName
     if [[ -f $tableName ]]; then
         echo "table already existed ,choose another name"
         tablesMenu
     fi
+    #reading num of col (row range)
     echo -e "Number of Columns: \c"
     read colsNum
     counter=1
     sep="|"
     rSep="\n"
     pKey=""
+    #defining meta data header for meta file (.$tablename)
     metaData="Field"$sep"Type"$sep"key"
+    #filling meta data (Field|type|key(if it is PK))
     while [ $counter -le $colsNum ]
     do
         echo -e "Name of Column No.$counter: \c"
@@ -27,6 +31,7 @@ createTable(){
                 * ) echo "Wrong Choice" ;;
             esac
         done
+        #defining which col is PK
         if [[ $pKey == "" ]]; then
             echo -e "Make PrimaryKey ? "
             select var in "yes" "no"
@@ -42,19 +47,28 @@ createTable(){
                 esac
             done
         else
+        #storing meta data anyways (after picking my PK)
             metaData+=$rSep$colName$sep$colType$sep""
         fi
+        #checking if while is done after setting meta data (passing colnames in main table)
+        #counter = 1 (my index i) , colsNum = num of cols from user
         if [[ $counter == $colsNum ]]; then
+        #end of line (row)
             temp=$temp$colName
         else
+        #still filling the line (row with colnames)
             temp=$temp$colName$sep
         fi
+        #increasing counter (index) to continue the while loop
         ((counter++))
     done
+    #creating tables (to append meta data in .tablename and colnames in tablename) files
     touch .$tableName
+    #after the meta data main header Field|Type|pk(if we picked it)
     echo -e $metaData  >> .$tableName
     touch $tableName
     echo -e $temp >> $tableName
+    #checking for exit status 0 = true, anything 1:255 errors
     if [[ $? == 0 ]]
     then
         echo "Table Created Successfully"
@@ -84,12 +98,13 @@ insert() {
     echo -e "Table Name: \c"
     read tableName
     if ! [[ -f $tableName ]]; then
-        echo "Table $tableName isn't existed ,choose another Table"
+        echo "Table $tableName doesn't exist ,choose another Table"
         tablesMenu
     fi
     colsNum=`awk 'END{print NR}' .$tableName`
     sep="|"
     rSep="\n"
+    #i = 2 because we have a header
     for (( i = 2; i <= $colsNum; i++ )); do
         colName=$(awk 'BEGIN{FS="|"}{ if(NR=='$i') print $1}' .$tableName)
         colType=$( awk 'BEGIN{FS="|"}{if(NR=='$i') print $2}' .$tableName)
@@ -108,6 +123,7 @@ insert() {
         
         if [[ $colKey == "PK" ]]; then
             while [[ true ]]; do
+            #checking for pk in current NR and previous rows (if i created the col as PK)
                 if [[ $data =~ ^[`awk 'BEGIN{FS="|" ; ORS=" "}{if(NR != 1)print $(('$i'-1))}' $tableName`]$ ]]; then
                     echo -e "invalid input for Primary Key !!"
                 else
@@ -125,8 +141,9 @@ insert() {
             done
         fi
         
-        #Set row
+        #Setting row
         if [[ $i == $colsNum ]]; then
+        #rSep = \n
             row=$row$data$rSep
         else
             row=$row$data$sep
@@ -139,6 +156,7 @@ insert() {
     else
         echo "Error Inserting Data into Table $tableName"
     fi
+    #initializing new row for the while loop
     row=""
     tablesMenu
 }

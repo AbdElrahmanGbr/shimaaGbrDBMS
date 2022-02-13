@@ -1,0 +1,5 @@
+Field|Type|key
+id|int|PK
+Name|str|
+Age|int|
+Salary|int|
