@@ -1,0 +1,12 @@
+scripts/Schema.sh: line 18: cd: databases/fsafsa: No such file or directory
+rm: cannot remove './databases/echo': No such file or directory
+rm: cannot remove '"Available': No such file or directory
+rm: descend into directory 'Databases'? rm: cannot remove 'are': No such file or directory
+rm: cannot remove ':': No such file or directory
+rm: cannot remove '"': No such file or directory
+rm: remove directory './databases/mostafa'? scripts/Database.sh: line 18: cd: databases/echo: No such file or directory
+scripts/Database.sh: line 18: cd: ./databases/gabr: No such file or directory
+scripts/Database.sh: line 18: cd: ./databases/fsaf: No such file or directory
+mv: target 'dada' is not a directory
+mv: target 'adasda' is not a directory
+scripts/Database.sh: line 17: cd: ./databases/shimaa: No such file or directory
