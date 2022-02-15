@@ -1,11 +1,28 @@
 #!/bin/bash
 createTable(){
+    echo "==========================="
+    echo "Available Tables in $dbName are : "
+    ls $dbname
+    echo "==========================="
     #reading table name from user
     echo -e "Table Name: \c"
     read tableName
-    if [[ -f $tableName ]]; then
+        if [[ -f $tableName ]]; then
         echo "table already existed ,choose another name"
         tablesMenu
+    fi
+    #condition for spaces after char
+    if [[ $tableName == *[[:space:]]* ]]
+then
+	echo "Table name can not contain spaces"
+	tablesMenu
+    #condition to make sure my database/dir startes with alphapitical char then follow up with anything (not containing spaces taking $1)
+    elif ! [[ $tableName =~ +([a-zA-Z]*[a-zA-Z0-9_]) ]]  
+then
+    echo "Table name MUST start with Alpha char and can't start or endup with symbols except _"
+	tablesMenu
+else
+    touch $tableName
     fi
     #reading num of col (row range)
     echo -e "Number of Columns: \c"
@@ -80,14 +97,23 @@ createTable(){
 }
 
 dropTable() {
+    echo "==========================="
+    echo "Available Tables in $dbName are : "
+    ls $dbname
+    echo "==========================="
     echo -e "Enter Table Name: \c"
     read tName
-    rm $tName .$tName 2>>./.error.log
-    if [[ $? == 0 ]]
-    then
-        echo "Table Dropped Successfully"
+        if [[ -f $tName ]]; then
+    select choice in "Remove?" "Cancel?" "Go to Tables Menu"
+    do 
+    case $choice in
+        "Remove?") rm $tName .$tName ; echo "Table Dropped Successfully";tablesMenu ;; 
+        "Cancel?") echo "Cancelled"; tablesMenu;;
+        "Go to Tables Menu") tablesMenu ;;
+    esac
+    done
     else
-        echo "Error Dropping Table $tName"
+    echo "Table Doesn't Exist!"
     fi
     tablesMenu
 }
@@ -95,6 +121,10 @@ dropTable() {
 # #################################
 
 insert() {
+    echo "==========================="
+    echo "Available Tables in $dbName are : "
+    ls $dbname
+    echo "==========================="
     echo -e "Table Name: \c"
     read tableName
     if ! [[ -f $tableName ]]; then
@@ -132,6 +162,7 @@ insert() {
                 echo -e "$colName ($colType) = \c"
                 read data
                 if [[ $colType == "int" ]]; then
+                    #validation for int data not equal extended regex (starting with digit or more)
                     while ! [[ $data =~ ^[0-9]*$ ]]; do
                         echo -e "invalid DataType !!"
                         echo -e "$colName ($colType) = \c"
@@ -165,7 +196,7 @@ insert() {
 updateTable() {
     echo -e "Enter Table Name: \c"
     read tName
-    echo -e "Enter Condition Column name: \c"
+    echo -e "Enter Column name to update : \c"
     read field
     fid=$(awk 'BEGIN{FS="|"}{if(NR==1){for(i=1;i<=NF;i++){if($i=="'$field'") print i}}}' $tName)
     if [[ $fid == "" ]]

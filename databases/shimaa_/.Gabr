@@ -1,0 +1,8 @@
+Field|Type|key
+id|int|PK
+name|str|
+Field|Type|key
+1|int|PK
+2|int|
+Field|Type|key
+1|int|PK

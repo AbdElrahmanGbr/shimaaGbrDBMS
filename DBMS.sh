@@ -53,15 +53,15 @@ function createDB {
     echo "==========================="
     echo -e "Enter Database Name: \c"
     read dbName
-#condition to make sure my database/dir startes with alphapitical char then follow up with anything (not containing spaces taking $1)
-    if [[ $dbName != +([a-zA-Z]*[a-zA-Z0-9_]) ]]  
-then
-    echo "database name can not contain numbers nor special characters"
-	createDB
-#condition for spaces after char
-elif [[ $dbName == *" "* ]]
+    #condition for spaces after char
+if [[ $dbName == *[[:space:]]* ]]
 then
 	echo "database name can not contain spaces"
+	createDB
+#condition to make sure my database/dir startes with alphapitical char then follow up with anything (not containing spaces taking $1)
+    elif ! [[ $dbName =~ +([a-zA-Z]*[a-zA-Z0-9_]) ]]  
+then
+    echo "Database MUST start with Alpha char and can't start or endup with symbols except _"
 	createDB
 else
     createDatabase $dbNames
@@ -80,14 +80,15 @@ function renameDB {
     then 
     echo -e "Enter New Database Name: \c"
     read newName
-    if [[ $newName != +([a-zA-Z_]*[a-zA-Z0-9_]) ]]  
-then
-    echo "Database MUST start with Alpha char and can't start or endup with symbols except _"
-	renameDB
+
 #condition for spaces after char
-elif [[ $newName == *" "* ]]
+    if [[ $newName == *[[:space:]]* ]]
 then
 	echo "database name can not contain spaces"
+	renameDB
+    elif ! [[ $newName =~ +([a-zA-Z_]*[a-zA-Z0-9_]) ]]  
+then
+    echo "Database MUST start with Alpha char and can't start or endup with symbols except _"
 	renameDB
 else
 renameDatabase $dbName $newName
@@ -127,9 +128,9 @@ function tablesMenu {
     case $ch in
         1)  ls .; tablesMenu ;;
         2)  createTable ;;
-        3)  insert;;
+        3)  insert ;;
         4)  clear; selectMenu ;;
-        5)  updateTable;;
+        5)  updateTable ;;
         6)  deleteFromTable;;
         7)  dropTable;;
         8) clear; cd ../.. 2>>./.error.log; mainMenu ;;
