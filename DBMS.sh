@@ -53,8 +53,13 @@ function createDB {
     echo "==========================="
     echo -e "Enter Database Name: \c"
     read dbName
+    #condition for empty entry
+    if [[ -z "$dbName" ]]
+    then
+    echo "Inputs cannot be blank please try again"
+    createDB
     #condition for spaces after char
-if [[ $dbName == *[[:space:]]* ]]
+elif [[ $dbName == *[[:space:]]* ]]
 then
 	echo "database name can not contain spaces"
 	createDB
@@ -80,9 +85,13 @@ function renameDB {
     then 
     echo -e "Enter New Database Name: \c"
     read newName
-
+    #condition for empty entry
+    if [[ -z "$newName" ]]
+    then
+    echo "Inputs cannot be blank please try again"
+    renameDB
 #condition for spaces after char
-    if [[ $newName == *[[:space:]]* ]]
+    elif [[ $newName == *[[:space:]]* ]]
 then
 	echo "database name can not contain spaces"
 	renameDB

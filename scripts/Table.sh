@@ -11,8 +11,13 @@ createTable(){
         echo "table already existed ,choose another name"
         tablesMenu
     fi
+    #condition for empty entry
+    if [[ -z "$tableName" ]]
+    then
+    echo "Inputs cannot be blank please try again"
+    tablesMenu
     #condition for spaces after char
-    if [[ $tableName == *[[:space:]]* ]]
+    elif [[ $tableName == *[[:space:]]* ]]
 then
 	echo "Table name can not contain spaces"
 	tablesMenu
