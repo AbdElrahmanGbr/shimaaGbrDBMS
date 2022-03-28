@@ -64,7 +64,7 @@ then
 	echo "database name can not contain spaces"
 	createDB
 #condition to make sure my database/dir startes with alphapitical char then follow up with anything (not containing spaces taking $1)
-    elif ! [[ $dbName =~ +([a-zA-Z]*[a-zA-Z0-9_]) ]]  
+    elif ! [[ $dbName =~ ^[a-zA-Z]*[a-zA-Z0-9_]$ ]]   
 then
     echo "Database MUST start with Alpha char and can't start or endup with symbols except _"
 	createDB
@@ -95,7 +95,7 @@ function renameDB {
 then
 	echo "database name can not contain spaces"
 	renameDB
-    elif ! [[ $newName =~ +([a-zA-Z_]*[a-zA-Z0-9_]) ]]  
+    elif ! [[ $newName =~ ^[a-zA-Z_]*[a-zA-Z0-9_]$ ]]  
 then
     echo "Database MUST start with Alpha char and can't start or endup with symbols except _"
 	renameDB

@@ -22,7 +22,7 @@ then
 	echo "Table name can not contain spaces"
 	tablesMenu
     #condition to make sure my database/dir startes with alphapitical char then follow up with anything (not containing spaces taking $1)
-    elif ! [[ $tableName =~ +([a-zA-Z]*[a-zA-Z0-9_]) ]]  
+    elif ! [[ $tableName =~ ^[a-zA-Z]*[a-zA-Z0-9_]$ ]]  
 then
     echo "Table name MUST start with Alpha char and can't start or endup with symbols except _"
 	tablesMenu
